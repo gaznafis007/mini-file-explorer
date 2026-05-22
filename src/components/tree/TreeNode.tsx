@@ -8,7 +8,7 @@ import { ContextMenu } from '@/components/ui/ContextMenu';
 import { Modal } from '@/components/ui/Modal';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { cn } from '@/lib/utils';
-import { ChevronRight, Folder, FolderOpen, FileText } from 'lucide-react';
+import { ChevronRight, Folder, FolderOpen, FileText, Pencil, Trash2 } from 'lucide-react';
 
 interface TreeNodeProps { node: FileNode; depth?: number; parentId: string | null; }
 
@@ -54,6 +54,26 @@ export function TreeNode({ node, depth = 0, parentId }: TreeNodeProps) {
           : <FileText size={15} className="shrink-0 text-blue-400" />
         }
         <span className="text-sm truncate flex-1 text-neutral-700 dark:text-neutral-200">{node.name}</span>
+        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 shrink-0 transition-opacity">
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setShowRenameModal(true); }}
+            className="p-0.5 rounded hover:bg-neutral-200 dark:hover:bg-neutral-700 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
+            aria-label={`Rename ${node.name}`}
+            title="Rename"
+          >
+            <Pencil size={12} />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
+            className="p-0.5 rounded hover:bg-red-100 dark:hover:bg-red-950 text-neutral-400 hover:text-red-500 transition-colors"
+            aria-label={`Delete ${node.name}`}
+            title="Delete"
+          >
+            <Trash2 size={12} />
+          </button>
+        </div>
       </div>
 
       {isFolder && isExpanded && node.children && (

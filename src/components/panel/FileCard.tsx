@@ -8,7 +8,7 @@ import { ContextMenu } from '@/components/ui/ContextMenu';
 import { Modal } from '@/components/ui/Modal';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { formatDate } from '@/lib/utils';
-import { Folder, FileText } from 'lucide-react';
+import { Folder, FileText, Pencil, Trash2 } from 'lucide-react';
 
 interface FileCardProps { node: FileNode; parentId: string | null; }
 
@@ -28,13 +28,33 @@ export function FileCard({ node, parentId }: FileCardProps) {
   return (
     <>
       <div
-        className="group flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors select-none text-center"
+        className="relative group flex flex-col items-center gap-2 p-3 rounded-xl cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors select-none text-center"
         onDoubleClick={handleDoubleClick}
         onContextMenu={(e) => openMenu(e, node.id, node.type, 'panel')}
         role="button" tabIndex={0}
         onKeyDown={(e) => e.key === 'Enter' && handleDoubleClick()}
         aria-label={`${isFolder ? 'Folder' : 'File'}: ${node.name}`}
       >
+        <div className="absolute top-1.5 right-1.5 flex gap-0.5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity">
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setShowRenameModal(true); }}
+            className="p-1 rounded-md bg-white/90 dark:bg-neutral-900/90 border border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300 shadow-sm transition-colors"
+            aria-label={`Rename ${node.name}`}
+            title="Rename"
+          >
+            <Pencil size={11} />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setShowDeleteConfirm(true); }}
+            className="p-1 rounded-md bg-white/90 dark:bg-neutral-900/90 border border-neutral-200 dark:border-neutral-700 text-neutral-500 hover:text-red-500 shadow-sm transition-colors"
+            aria-label={`Delete ${node.name}`}
+            title="Delete"
+          >
+            <Trash2 size={11} />
+          </button>
+        </div>
         <div className="w-14 h-14 flex items-center justify-center rounded-xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 group-hover:border-neutral-300 dark:group-hover:border-neutral-600 transition-colors">
           {isFolder
             ? <Folder size={28} className="text-yellow-500" fill="currentColor" fillOpacity={0.15} />

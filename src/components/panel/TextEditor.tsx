@@ -5,7 +5,7 @@
 // It extracts non-reactive logic from effects so that `content` is always fresh
 // without being listed as a dependency.
 
-import { useState, useEffect, useRef, experimental_useEffectEvent as useEffectEvent } from 'react';
+import { useState, useEffect, useRef, useEffectEvent } from 'react';
 import { useFileSystem } from '@/hooks/useFileSystem';
 import { ArrowLeft, Save, CheckCircle } from 'lucide-react';
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, KeyboardEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 
 interface ModalProps {
@@ -19,7 +20,10 @@ export function Modal({
 }: ModalProps) {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => { setMounted(true); }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -29,7 +33,7 @@ export function Modal({
     }
   }, [isOpen, initialValue]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
   function handleConfirm() {
     const err = onConfirm(value);
@@ -42,7 +46,7 @@ export function Modal({
     if (e.key === 'Escape') onClose();
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-white dark:bg-neutral-900 rounded-xl shadow-2xl border border-neutral-200 dark:border-neutral-700 w-full max-w-sm mx-4 p-6" onClick={(e) => e.stopPropagation()}>
         <h2 className="text-base font-semibold text-neutral-900 dark:text-neutral-100 mb-4">{title}</h2>
@@ -75,6 +79,7 @@ export function Modal({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
